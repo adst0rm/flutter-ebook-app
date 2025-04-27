@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'pages/book_detail_page.dart';
+import 'providers/chat_provider.dart';
 
 void main() {
-  runApp(const EBookApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+      ],
+      child: const EBookApp(),
+    ),
+  );
 }
 
 class EBookApp extends StatelessWidget {
@@ -11,7 +21,7 @@ class EBookApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'E-Book Reader',
+      title: 'TalkiTap',
       theme: ThemeData(
         primaryColor: const Color(0xFF1E88E5),
         colorScheme: ColorScheme.fromSeed(
@@ -96,7 +106,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                 children: [
                   const SizedBox(height: 40),
                   Text(
-                    'Welcome to Kelbet Til!',
+                    'TalkiTap-қа қош келдіңіз!',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -112,7 +122,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Let\'s set up your profile',
+                    'Профиліңізді құрастырайық',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white.withOpacity(0.9),
@@ -137,12 +147,18 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                         TextFormField(
                           controller: _usernameController,
                           decoration: const InputDecoration(
-                            labelText: 'Username',
+                            labelText: 'Пайдаланушы аты',
                             prefixIcon: Icon(Icons.person_outline),
                           ),
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r'[а-яА-ЯәіңғүұқөһӘІҢҒҮҰҚӨҺa-zA-Z0-9\s]')),
+                          ],
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your username';
+                              return 'Пайдаланушы атын енгізіңіз';
                             }
                             return null;
                           },
@@ -151,12 +167,18 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                         TextFormField(
                           controller: _schoolController,
                           decoration: const InputDecoration(
-                            labelText: 'School',
+                            labelText: 'Мектеп',
                             prefixIcon: Icon(Icons.school_outlined),
                           ),
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r'[а-яА-ЯәіңғүұқөһӘІҢҒҮҰҚӨҺa-zA-Z0-9\s]')),
+                          ],
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your school';
+                              return 'Мектеп атын енгізіңіз';
                             }
                             return null;
                           },
@@ -165,7 +187,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                         DropdownButtonFormField<String>(
                           value: _selectedGrade,
                           decoration: const InputDecoration(
-                            labelText: 'Grade',
+                            labelText: 'Сынып',
                             prefixIcon: Icon(Icons.grade_outlined),
                           ),
                           items: _grades.map((grade) {
@@ -194,7 +216,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                               ),
                             ),
                             child: const Text(
-                              'Continue',
+                              'Жалғастыру',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -302,8 +324,8 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   isSaved
-                      ? 'Saved Book ${index + 1}'
-                      : 'Book Title ${index + 1}',
+                      ? 'Сақталған кітап ${index + 1}'
+                      : 'Кітап атауы ${index + 1}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -311,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Author ${index + 1}',
+                  'Автор ${index + 1}',
                   style: TextStyle(
                     color: Colors.grey[600],
                   ),
@@ -349,10 +371,10 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(
           _currentIndex == 2
-              ? 'Profile'
+              ? 'Профиль'
               : _currentIndex == 1
-                  ? 'Hello, ${widget.username}!'
-                  : 'Saved Books',
+                  ? 'Сәлем, ${widget.username}!'
+                  : 'Сақталған кітаптар',
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -400,7 +422,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: _searchController,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Search books...',
+                          hintText: 'Кітаптарды іздеу...',
                           hintStyle:
                               TextStyle(color: Colors.white.withOpacity(0.7)),
                           prefixIcon:
@@ -430,15 +452,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               DropdownButtonFormField<String>(
                                 value: _selectedGrade,
                                 decoration: const InputDecoration(
-                                  labelText: 'Grade',
+                                  labelText: 'Сынып',
                                   prefixIcon: Icon(Icons.grade),
                                 ),
                                 items: _grades.map((grade) {
                                   return DropdownMenuItem(
                                     value: grade,
                                     child: Text(grade == 'All'
-                                        ? 'All Grades'
-                                        : 'Grade $grade'),
+                                        ? 'Барлық сыныптар'
+                                        : 'Сынып $grade'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -453,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               DropdownButtonFormField<String>(
                                 value: _selectedLanguage,
                                 decoration: const InputDecoration(
-                                  labelText: 'Language',
+                                  labelText: 'Тіл',
                                   prefixIcon: Icon(Icons.language),
                                 ),
                                 items: _languages.map((language) {
@@ -474,15 +496,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               DropdownButtonFormField<String>(
                                 value: _selectedTerm,
                                 decoration: const InputDecoration(
-                                  labelText: 'Term',
+                                  labelText: 'Тоқсан',
                                   prefixIcon: Icon(Icons.calendar_today),
                                 ),
                                 items: _terms.map((term) {
                                   return DropdownMenuItem(
                                     value: term,
                                     child: Text(term == 'All'
-                                        ? 'All Terms'
-                                        : 'Term $term'),
+                                        ? 'Барлық тоқсандар'
+                                        : 'Тоқсан $term'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -514,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           children: [
                             const Text(
-                              'Continue Reading',
+                              'Танымал кітаптар',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -600,7 +622,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    'Popular Books',
+                    'Tanzalı kitaplar',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -700,7 +722,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: _currentIndex == 0 ? 28 : 24,
                       ),
                     ),
-                    label: 'Saved',
+                    label: 'Сақталған',
                   ),
                   BottomNavigationBarItem(
                     icon: Container(
@@ -716,7 +738,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: _currentIndex == 1 ? 28 : 24,
                       ),
                     ),
-                    label: 'Library',
+                    label: 'Кітапхана',
                   ),
                   BottomNavigationBarItem(
                     icon: Container(
@@ -732,7 +754,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: _currentIndex == 2 ? 28 : 24,
                       ),
                     ),
-                    label: 'Profile',
+                    label: 'Профиль',
                   ),
                 ],
               ),

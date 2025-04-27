@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test_1_app/pages/reading_page.dart';
+import 'package:test_1_app/pages/chat_page.dart';
+import 'package:test_1_app/providers/chat_provider.dart';
 
 class BookDetailPage extends StatelessWidget {
   final String title;
@@ -59,7 +62,7 @@ class BookDetailPage extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        'By $author',
+                        'Автор: $author',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
@@ -169,7 +172,7 @@ class BookDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 32),
                           Text(
-                            'Description',
+                            'Сипаттама',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -178,7 +181,9 @@ class BookDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'This is a sample description for $title. Add your actual book description here.',
+                            '''"Өзгеріс" - Франц Кафканың 19 ғасырдың соңында жазған повесі. Кітапта басты кейіпкер Грегор Замзаның бір күні таңертең өзінің қорқынышты жәндікке айналғанын көріп, оның жан-жақты өзгерістері арқылы жатсыну мен сенімділік мәселелері қарастырылады. Әңгіме Грегордың жаңа денесіне бейімделуге тырысуы мен оның отбасына әсері туралы, қоғамдық күтулер мен отбасылық міндеттердің жарығына қарайды.
+
+"Өзгеріс" басталуы Грегор Замзаның шошынышты метаморфозының көрінісін ұсынады. Бастапқыда шатасып, ыңғайсыздық сезімінде, ол саяхатшы сатушы ретіндегі өмірі мен жұмысының ауыртпалықтары туралы ойланады, сонымен бірге өзінің жағдайының абсурдтылығымен күреседі. Ол төсектен тұруға тырысқанда, отбасының алаңдаушылығы ояна бастайды. Оның анасы жұмысқа кешігуіне алаңдап есігіне қағады, бұл Грегордың отбасының оның өзгерісіне қалай жауап беретіні туралы алаңдауын тудырады. Олармен байланысуға және оларды тыныштандыруға тырысқанына қарамастан, оның жағдайынан туындаған қорқыныш пен түсінбеушілік тез анық болады. Бұл қызық және қайғылы басталу, повестің бойында дамитын жатсыну мен отбасылық қатынастарды зерттеуге тон береді.''',
                             style: TextStyle(
                               fontSize: 16,
                               height: 1.6,
@@ -239,7 +244,7 @@ class BookDetailPage extends StatelessWidget {
                           Icon(Icons.book, size: 20),
                           SizedBox(width: 8),
                           Text(
-                            'Read',
+                            'Оқу',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -263,8 +268,18 @@ class BookDetailPage extends StatelessWidget {
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.chat_outlined),
-                      onPressed: () {},
-                      tooltip: 'Chat with AI about this book',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (_) => ChatProvider(),
+                              child: ChatPage(bookTitle: title),
+                            ),
+                          ),
+                        );
+                      },
+                      tooltip: 'Кітап туралы AI-мен сөйлесу',
                       color: Theme.of(context).primaryColor,
                     ),
                   ),

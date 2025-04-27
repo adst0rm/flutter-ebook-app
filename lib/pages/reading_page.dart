@@ -104,7 +104,7 @@ class _ReadingPageState extends State<ReadingPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Adjust Text Size'),
+        title: const Text('Мәтін өлшемін реттеу'),
         content: StatefulBuilder(
           builder: (context, setState) => Column(
             mainAxisSize: MainAxisSize.min,
@@ -123,7 +123,7 @@ class _ReadingPageState extends State<ReadingPage> {
                 },
               ),
               Text(
-                'Sample Text',
+                'Үлгі мәтін',
                 style: TextStyle(fontSize: _fontSize),
               ),
             ],
@@ -132,7 +132,7 @@ class _ReadingPageState extends State<ReadingPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: const Text('Жабу'),
           ),
         ],
       ),
@@ -148,7 +148,7 @@ class _ReadingPageState extends State<ReadingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Highlights',
+              'Бөлектеулер',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -188,7 +188,7 @@ class _ReadingPageState extends State<ReadingPage> {
     });
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Text highlighted'),
+        content: Text('Мәтін бөлектелді'),
         duration: Duration(seconds: 1),
       ),
     );
@@ -225,7 +225,7 @@ class _CustomTextSelectionControls extends MaterialTextSelectionControls {
             delegate.hideToolbar();
           },
           child: const Text(
-            'Highlight',
+            'Бөлектеу',
             style: TextStyle(color: Colors.yellow),
           ),
         ),
